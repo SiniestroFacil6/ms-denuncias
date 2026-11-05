@@ -1,0 +1,46 @@
+# ==========================================
+# Build and Project Files
+# ==========================================
+HELP.md
+target/
+build/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# ==========================================
+# IntelliJ IDEA
+# ==========================================
+.idea/
+*.iml
+*.ipr
+*.iws
+tasks.xml
+workspace.xml
+
+# ==========================================
+# Eclipse / STS
+# ==========================================
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# ==========================================
+# NetBeans
+# ==========================================
+/.nb-gradle/
+/dist/
+/nbbuild/
+/nbdist/
+/nbproject/private/
+
+# ==========================================
+# VS Code
+# ==========================================
+.vscode/
