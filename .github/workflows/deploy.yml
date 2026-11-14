@@ -44,4 +44,32 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: microservicio-jar
-          path: target/*.jar
+          path: |
+            target/*.jar
+            target/*.zip
+
+  cd-deploy-aws:
+    name: 2. Despliegue Continuo a AWS
+    needs: ci-build-and-test  # Solo se ejecuta si el paso 1 sale en verde
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo del repositorio
+        uses: actions/checkout@v4
+
+      - name: Descargar artefacto .jar generado en el paso anterior
+        uses: actions/download-artifact@v4
+        with:
+          name: microservicio-jar
+          path: target/
+
+      - name: Configurar credenciales temporales de AWS Academy
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      - name: Desplegar a AWS Cloud (Serverless)
+        run: npx serverless@3.38.0 deploy --stage dev

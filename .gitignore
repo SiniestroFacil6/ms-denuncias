@@ -44,3 +44,5 @@ workspace.xml
 # VS Code
 # ==========================================
 .vscode/
+# Serverless Framework
+.serverless/
