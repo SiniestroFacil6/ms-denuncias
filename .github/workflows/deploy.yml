@@ -1,0 +1,47 @@
+name: Pipeline CI/CD - ms-denuncias (Java 21)
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  ci-build-and-test:
+    name: 1. Integracion Continua (Build, Test & Artifact)
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: db_denuncias
+        ports:
+          - 3307:3306
+        options: >-
+          --health-cmd="mysqladmin ping -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    steps:
+      - name: Descargar codigo del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 21 (Amazon Corretto)
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'corretto'
+          java-version: '21'
+          cache: 'maven'
+
+      - name: Ejecutar pruebas unitarias (JUnit)
+        run: mvn test
+
+      - name: Empaquetar aplicacion (.jar)
+        run: mvn package -DskipTests
+
+      - name: Guardar artefacto compilado en GitHub
+        uses: actions/upload-artifact@v4
+        with:
+          name: microservicio-jar
+          path: target/*.jar
